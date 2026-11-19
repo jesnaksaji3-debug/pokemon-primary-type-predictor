@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Predict | Pokemon Type Predictor{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <p class="eyebrow">Type prediction</p>
+  <h1>Enter Pokemon statistics</h1>
+  <p class="form-intro">Enter values within the ranges represented in the dataset. Height is in decimeters (dm), and Weight is in hectograms (hg).</p>
+
+  <form action="{{ url_for('result') }}" method="post">
+    <div class="form-grid">
+      {% for field, label, minimum, maximum in [
+        ('hp', 'HP', 1, 255),
+        ('attack', 'Attack', 5, 190),
+        ('defense', 'Defense', 5, 250),
+        ('height_dm', 'Height (dm)', 1, 1000),
+        ('weight_hg', 'Weight (hg)', 1, 10000),
+        ('base_experience', 'Base Experience (optional)', 36, 608)
+      ] %}
+      <div class="field">
+        <label for="{{ field }}">{{ label }}</label>
+        <input
+          id="{{ field }}"
+          name="{{ field }}"
+          type="number"
+          min="{{ minimum }}"
+          max="{{ maximum }}"
+          step="any"
+          value="{{ values.get(field, '') }}"
+          {% if field != 'base_experience' %}required{% endif %}
+          aria-invalid="{{ 'true' if errors.get(field) else 'false' }}"
+          {% if errors.get(field) %}aria-describedby="{{ field }}-error"{% endif %}
+        >
+        {% if errors.get(field) %}
+        <p class="field-error" id="{{ field }}-error">{{ errors[field] }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <p class="hint">Leave Base Experience blank if it is unknown; the model will fill it using the median from its training data.</p>
+    <button class="button" type="submit">Predict primary type</button>
+  </form>
+</section>
+{% endblock %}

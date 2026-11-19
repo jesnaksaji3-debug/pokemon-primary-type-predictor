@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction | Pokemon Type Predictor{% endblock %}
+
+{% block content %}
+<section class="result-panel">
+  <p class="eyebrow">Prediction result</p>
+  <h1>Predicted primary type</h1>
+  <p class="type-result">{{ predicted_type }}</p>
+  <h2>Statistics entered</h2>
+  <dl class="stats-list">
+    {% for field, label in field_labels.items() %}
+    <div>
+      <dt>{{ label }}</dt>
+      <dd>{{ values.get(field) or "Not provided (median used)" }}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <a class="button button-secondary" href="{{ url_for('predict') }}">Make another prediction</a>
+</section>
+{% endblock %}
